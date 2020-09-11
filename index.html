@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jogo da Cobrinha</title>
+	<style type="text/css">
+		canvas{
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+
+	<canvas id="stage" width="625" height="625"></canvas>
+
+	<script type="text/javascript">
+		window.onload = function(){
+			var stage = document.getElementById("stage");
+			var context = stage.getContext("2d");
+			document.addEventListener("keydown", keyPush);
+
+			// Ele defini um intervalo a ser chamado a cada x tempo
+			setInterval(game, 80);
+
+			const velocidade = 1;
+			var velocidade_x = velocidade_y = 0;
+			var ponto_x = 10;
+			var ponto_y = 10;
+			var tamanho_quadrado = 25;
+			var quantidade_quadrado = 25;
+			var posicao_x = posicao_y = 15;
+			var trail = [];
+			tail = 5;
+
+			function game(){
+				var a = 5;
+				ponto_x += velocidade_x;
+				ponto_y += velocidade_y;
+
+				if(ponto_x < 0){
+					ponto_x = quantidade_quadrado-1;
+				}
+
+				if(ponto_x > quantidade_quadrado-1){
+					ponto_x = 0;
+				}
+
+				if(ponto_y < 0){
+					ponto_y = quantidade_quadrado-1;
+				}
+
+				if(ponto_y > quantidade_quadrado-1){
+					ponto_y = 0;
+				}
+
+
+				context.fillStyle = "black";
+				// Cria  no ponto 0,0 pegando a largura e altura definida
+				context.fillRect(0, 0, stage.width, stage.height);
+				context.fillStyle = "red";
+				context.fillRect(posicao_x*tamanho_quadrado, posicao_y * quantidade_quadrado, tamanho_quadrado, tamanho_quadrado);
+			
+				context.fillStyle = "gray";
+
+				for(var i = 0; i < trail.length; i++){
+					context.fillRect(trail[i].x * tamanho_quadrado, trail[i].y * tamanho_quadrado, tamanho_quadrado-1, tamanho_quadrado-1);
+					
+					if(trail[i].x == ponto_x && trail[i].y == ponto_y){
+						velocidade_x = velocidade_y = 0;
+						tail = 5;
+					}
+				}
+
+				trail.push({x:ponto_x, y:ponto_y})
+				while (trail.length > tail){
+					// Tira elemento do array
+					trail.shift();
+				}
+
+				if(posicao_x == ponto_x && posicao_y == ponto_y){
+					tail++;
+					// floor arredonda para baixo
+					posicao_x = Math.floor(Math.random() * quantidade_quadrado);
+					posicao_y = Math.floor(Math.random() * quantidade_quadrado);
+				}
+			}
+
+			function keyPush(event){
+ 
+                switch (event.keyCode) {
+                    case 37: // Left
+                        velocidade_x = -velocidade;
+                        velocidade_y = 0;
+                        break;
+                    case 38: // up
+                        velocidade_x = 0;
+                        velocidade_y = -velocidade;
+                        break;
+                    case 39: // right
+                        velocidade_x = velocidade;
+                        velocidade_y = 0;
+                        break;
+                    case 40: // down
+                        velocidade_x = 0;
+                        velocidade_y = velocidade;
+                        break;          
+                    default:
+                        
+                        break;
+                }
+ 
+ 
+            }
+
+
+		}
+
+	</script>
+
+</body>
+</html>
